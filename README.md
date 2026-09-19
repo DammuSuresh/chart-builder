@@ -26,12 +26,6 @@ The resolution has three parts:
 
 Groups are now collapsed into an accordion (only the first group per section starts open) — added on request, after the above was already working. That reopens a version of the sales lead's original complaint: a field outside the first group is back to being one click away instead of zero. I mitigated the worst of it — search still force-expands any group with a match, so a searched-for field is never buried — but *browsing* (no typing) now costs a click for most fields. That's a real regression against the original brief's "nothing hidden," made deliberately in exchange for a more compact default panel, and it's the first thing I'd revisit if the live-demo use case is still the priority.
 
-### Other choices and trade-offs
-
-- **Vega-Lite for charts**, chosen over hand-written Vega grammar for verbosity reasons. Chart type is inferred from the selection: a lone measure is a stat tile ("sometimes the answer isn't a chart"), one attribute + one measure is a bar (or a line if the attribute is time-like), and a second attribute adds a color/legend split. A second *measure* deliberately does not add a dual axis (a chart with two y-scales is close to always misleading) — it shows as a supplementary stat tile instead, with that simplification called out in the UI rather than silently dropped.
-- **A seeded synthetic dataset** backs every one of the 28 fields, so the chart responds to *any* combination the user picks, not a couple of hardcoded demo pairs.
-- **Redux Toolkit** owns the multi-chart dashboard state (charts, their fields, layout, which one is being edited); ephemeral UI state (search text, tooltip visibility) deliberately stays local — it doesn't need to be shared or persisted.
-- **IndexedDB persistence** (via `idb-keyval`) saves the dashboard across reloads, debounced so a drag operation doesn't spam writes. The live-measured grid column count is explicitly *not* persisted — restoring a stale value from a wider screen was an actual bug I hit and fixed (new charts kept landing in the wrong column after a resize).
 
 ### One thing to test
 
