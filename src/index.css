@@ -1,0 +1,720 @@
+:root {
+  --surface: #fcfcfb;
+  --page: #f9f9f7;
+  --ink: #0b0b0b;
+  --ink-secondary: #52514e;
+  --ink-muted: #898781;
+  --gridline: #e1e0d9;
+  --baseline: #c3c2b7;
+  --series-1: #2a78d6; /* attribute dot / default series */
+  --series-2: #eb6834; /* measure dot */
+
+  color-scheme: light;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--ink);
+  background: var(--page);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Layout --- */
+
+.shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.shell-header h1 {
+  font-size: 26px;
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+
+.shell-subtitle {
+  color: var(--ink-secondary);
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+
+.shell-body {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.canvas {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --- Field picker panel --- */
+
+.field-panel {
+  width: 380px;
+  flex: 0 0 380px;
+  background: var(--surface);
+  border: 1px solid var(--gridline);
+  border-radius: 12px;
+  padding: 16px;
+  max-height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+  container-name: field-panel;
+}
+
+.field-search {
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.field-search input {
+  width: 100%;
+  padding: 10px 32px 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--baseline);
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.field-search input:focus {
+  outline: 2px solid var(--series-1);
+  outline-offset: 1px;
+}
+
+.field-search-clear {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ink-muted);
+  padding: 4px;
+}
+
+.field-panel-status {
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin: 2px 0 12px;
+}
+
+.field-panel-scroll {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;
+  margin-right: -4px;
+}
+
+.field-panel-empty {
+  text-align: center;
+  padding: 32px 8px;
+  color: var(--ink-secondary);
+  font-size: 13px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--series-1);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.field-section {
+  margin-bottom: 16px;
+}
+
+.field-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--gridline);
+}
+
+.field-accordion-item {
+  margin-bottom: 4px;
+}
+
+.field-accordion-header {
+  margin: 0;
+}
+
+.field-group-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  padding: 6px 2px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  cursor: pointer;
+  text-align: left;
+  border-radius: 6px;
+}
+
+.field-group-trigger:hover {
+  background: rgba(11, 11, 11, 0.03);
+}
+
+.field-group-trigger:focus-visible {
+  outline: 2px solid var(--series-1);
+  outline-offset: 1px;
+}
+
+.field-group-chevron {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-right: 1.5px solid var(--ink-muted);
+  border-bottom: 1.5px solid var(--ink-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.field-group-trigger[data-state='open'] .field-group-chevron {
+  transform: rotate(45deg);
+}
+
+.field-group-count {
+  margin-left: auto;
+  font-weight: 400;
+  color: var(--ink-muted);
+  font-size: 12px;
+}
+
+.field-accordion-content {
+  padding: 2px 2px 6px;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.field-row-wrapper {
+  position: relative;
+}
+
+.field-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.field-row:hover {
+  background: rgba(11, 11, 11, 0.04);
+}
+
+.field-row:focus-visible {
+  outline: 2px solid var(--series-1);
+  outline-offset: 1px;
+}
+
+.field-row.is-selected {
+  background: rgba(42, 120, 214, 0.08);
+  border-color: rgba(42, 120, 214, 0.35);
+}
+
+.field-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.field-dot-attribute {
+  background: var(--series-1);
+}
+
+.field-dot-measure {
+  background: var(--series-2);
+}
+
+.field-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.field-label mark {
+  background: rgba(237, 161, 0, 0.35);
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.field-check {
+  color: var(--series-1);
+  font-size: 12px;
+  flex: 0 0 auto;
+}
+
+.field-tooltip {
+  position: fixed;
+  z-index: 1000;
+  min-width: 220px;
+  max-width: 260px;
+  background: var(--ink);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
+.field-tooltip strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 12px;
+}
+
+.field-tooltip p {
+  margin: 0;
+  color: #e5e4e0;
+}
+
+/* --- Editing bar (shows which chart the field panel is currently editing) --- */
+
+.editing-bar {
+  background: var(--surface);
+  border: 1px solid var(--gridline);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.editing-bar-empty {
+  color: var(--ink-muted);
+  font-size: 13px;
+  padding: 16px;
+  text-align: center;
+}
+
+.editing-bar-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+}
+
+.editing-bar-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(11, 11, 11, 0.03);
+  border: 1px solid var(--gridline);
+  color: var(--ink);
+}
+
+.chip-attribute {
+  border-color: rgba(42, 120, 214, 0.4);
+}
+
+.chip-measure {
+  border-color: rgba(235, 104, 52, 0.4);
+}
+
+.chip button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--ink-muted);
+  padding: 0;
+}
+
+.chip button:hover {
+  color: var(--ink);
+}
+
+/* --- Chart preview --- */
+
+.chart-preview {
+  background: var(--surface);
+  border: 1px solid var(--gridline);
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 260px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chart-preview-empty {
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.chart-preview-canvas {
+  overflow-x: auto;
+  flex: 1;
+  min-height: 180px;
+}
+
+.chart-preview-canvas .vega-embed,
+.chart-preview-canvas .vega-embed > div {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-note {
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.chart-preview-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chart-preview-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.chart-preview-subtitle {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-secondary);
+}
+
+.chart-preview-hint {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-secondary);
+}
+
+.chart-preview-divider {
+  border: none;
+  border-top: 1px solid var(--gridline);
+  margin: 4px 0 0;
+}
+
+.chart-preview-samplenote {
+  margin: 0;
+  font-size: 11.5px;
+  font-style: italic;
+  color: var(--ink-muted);
+}
+
+.stat-tile-hero {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--series-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table-toggle summary {
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--series-1);
+  list-style: revert;
+}
+
+.data-table-toggle summary::marker {
+  color: var(--series-1);
+}
+
+.data-table-wrap {
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--gridline);
+  white-space: nowrap;
+}
+
+.data-table th {
+  color: var(--ink-secondary);
+  font-weight: 600;
+}
+
+.data-table td {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stat-tile {
+  background: var(--page);
+  border: 1px solid var(--gridline);
+  border-radius: 10px;
+  padding: 14px 18px;
+  min-width: 160px;
+}
+
+.stat-tile-compact {
+  padding: 10px 14px;
+  min-width: 120px;
+}
+
+.stat-tile-label {
+  font-size: 11px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.stat-tile-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-tile-compact .stat-tile-value {
+  font-size: 18px;
+}
+
+/* --- Charts dashboard (react-grid-layout) --- */
+
+.dashboard-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.add-chart-button {
+  border: 1px solid var(--baseline);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-chart-button:hover {
+  background: rgba(11, 11, 11, 0.04);
+}
+
+.dashboard-empty {
+  background: var(--surface);
+  border: 1px dashed var(--baseline);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--ink-secondary);
+}
+
+.dashboard-empty p {
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+
+.chart-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--gridline);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.chart-card.is-active {
+  border-color: var(--series-1);
+  box-shadow: 0 0 0 2px rgba(42, 120, 214, 0.25);
+}
+
+.chart-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 8px 8px 12px;
+  border-bottom: 1px solid var(--gridline);
+  flex: 0 0 auto;
+}
+
+.chart-card-handle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: grab;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.chart-card-actions {
+  display: flex;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.chart-card-icon-button {
+  border: none;
+  background: transparent;
+  color: var(--ink-muted);
+  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.chart-card-icon-button:hover {
+  background: rgba(11, 11, 11, 0.06);
+  color: var(--ink);
+}
+
+.chart-card-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.chart-card-body .chart-preview {
+  height: 100%;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 12px 16px;
+}
+
+.react-grid-placeholder {
+  background: var(--series-1) !important;
+  opacity: 0.12 !important;
+  border-radius: 12px;
+  /* it's a drop-target ghost, never a click target — belt-and-suspenders in
+     case it's ever left mounted between drags */
+  pointer-events: none !important;
+}
+
+/* --- Responsive overrides (kept last so source order can't fight the cascade) --- */
+
+@media (max-width: 860px) {
+  .shell-body {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .field-panel {
+    width: 100%;
+    flex: none;
+    max-height: none;
+  }
+}
+
+/* Field grid columns track the PANEL's own width, not the viewport's — the
+   panel is a fixed 380px sidebar on desktop but stretches to full viewport
+   width once stacked on tablet/phone, so a viewport media query alone would
+   get this wrong in the stacked case. */
+@container field-panel (min-width: 320px) {
+  .field-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container field-panel (min-width: 640px) {
+  .field-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@container field-panel (min-width: 920px) {
+  .field-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
